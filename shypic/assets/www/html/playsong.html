@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		#main{
+			background-color:rgba(0,0,0,.5);
+			
+		}
+	</style>
+	<script type="text/javascript" src="../js/jquery-3.1.1.js"></script>
+	<script type="text/javascript">
+	$(function(){
+		
+		//获取地址栏参数列表的name值
+		var listname=GetQueryString("name");
+		
+		alert(listname)
+		
+		$.ajax({
+			type:"post",
+			url:"http://12.12.13.130:8080/0419sshweb/user_getMuiscName.action",
+			data:{"name":listname},
+			dataType:"json",
+			beforeSend:function(){
+				//alert("正在请求服务器资源");
+			},  
+			success:function(data){
+				 $.each(data,function(index,value)
+	                     {	
+	                         alert(value.mpath);
+	                         var  path="http://12.12.13.130:8080/0419sshweb/res/"+value.mpath;
+	                         $("#ad").attr({"src":path});
+	                        
+	                     });
+				
+			},  
+			error:function(){
+				alert("请求服务器资源失败！");
+			}
+		});
+		
+	});
+	
+	//解析地址栏参数问题
+	function GetQueryString(name){
+	     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+	     var r = window.location.search.substr(1).match(reg);
+	    // if(r!=null)return  unescape(r[2]if(r!=null)return  unescape(r[2]); 
+	    // return null;
+	    //解析中文乱码
+	    return r?decodeURIComponent(r[2]):null;
+	}
+	
+	
+		
+		
+	</script>
+</head>
+<body>
+     <div id="main">
+	 <audio id="ad" src="" controls="controls"></audio>
+	 </div>
+</body>
+</html>

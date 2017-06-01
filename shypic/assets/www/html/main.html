@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=gb2312" />
+<title>mix app</title>
+    <link rel="stylesheet" type="text/css" href="../css/promptumenu.css" />
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script type="text/javascript" src="../js/jquery.promptu-menu.js"></script>
+
+    <script type="text/javascript">
+        $(function(){
+            $('ul.promptu-menu').promptumenu({width:300, height:400, rows: 1, columns: 1, direction: 'horizontal', pages: true});
+        });
+    </script>
+<style type="text/css">
+body{
+
+    margin: 0px;
+    padding: 0px;
+    background-color:rgba(255,125,155,.6);
+}
+#container{
+
+    display: -moz-box;
+    display: -webkit-box;
+    -moz-box-orient: vertical;
+    -webkit-box-orient: vertical;
+    margin: 0;
+    padding: 0;
+}
+#header{
+    -moz-box-ordinal-group: 1;
+    -webkit-box-ordinal-group: 1;
+    width: 100%;
+    height: 50px;
+    color: #fff;
+    text-align: center;
+}
+#contents{
+
+    -moz-box-ordinal-group: 2;
+    -webkit-box-ordinal-group: 2;
+    -moz-box-flex:1;
+    -webkit-box-flex:1;
+    padding: 10px;
+
+
+}
+#main,.box{
+    width: 290px;
+    position: relative;
+    margin: 10px auto 0 auto;
+
+}
+.promptu-menu img{
+    width: 200px;
+    height: 200px;
+    margin-left: 16%;
+    z-index:100;
+}
+
+#footer{
+    -moz-box-flex:1;
+    -webkit-box-flex:1;
+    -moz-box-ordinal-group: 3;
+    -webkit-box-ordinal-group: 3;
+}
+.box-border1{
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius:50% ;
+    border: 2px solid #fff;
+    position: absolute;
+    left: 10%;
+
+}
+
+.box-border2{
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border-radius:50% ;
+    border: 2px solid #fff;
+    position: absolute;
+    left: 42%;
+    top:-10px;
+
+
+
+}
+.box-border1:after{
+    width: 20px;
+    content: "location";
+    position: absolute;
+    color: #fff;
+    font-size: 12px;
+    top:35px;
+    right: 20px;
+
+
+
+}
+.box-border3{
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius:50% ;
+    border: 2px solid #fff;
+    position: absolute;
+    left: 80%;
+
+}
+.box-border3:after{
+    width: 20px;
+    content: attr(data-name);
+    position: absolute;
+    color: #fff;
+    font-size: 12px;
+    top:35px;
+    right: 10px;
+
+
+
+}
+#header, #contents, #footer{
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+   
+   
+ ul li:first-child:after{
+        content:"Animated Icon";
+        position: absolute;
+        color: #fff;
+        top:75%;
+        right: 34%;
+
+    }
+ ul li:nth-child(2):after{
+    content:"Music";
+    position: absolute;
+    color: #fff;
+    top:75%;
+    right: 45%;
+
+}
+ul li:nth-child(3):after{
+    content:"Video";
+    position: absolute;
+    color: #fff;
+    top:75%;
+    right: 45%;
+
+}
+</style>
+</head>
+<body>
+<div id="container">
+    <div id="header">
+        <h1>mix app</h1>
+
+    </div>
+    <div id="contents">
+        <div id="main">
+            <ul class="promptu-menu">
+                <li><a href="one_animation.html"><img src="../img/bgpink.png" id="animationone" alt="会动的图标" ontouchstart="window.location.href='one_animation.html'"/></a></li>
+                <li><a href="playaudio3.html"><img src="../img/lightblue.png" alt="" ontouchstart="window.location.href='playaudio3.html'"/></a></li>
+                <li><a href="playvideo.html"><img src="../img/lightgreen.png" alt="" ontouchstart="window.location.href='playvideo2.html'"/></a></li>
+                <li><a href=""><img src="../img/yellow.png" alt="" ontouchstart="window.location.href=''"/></a></li>
+                <li><img src="../img/purple.png" alt="" /></li>
+                <li><img src="../img/orange.png" alt="" /></li>
+                <li><img src="../img/lightpurple.png" alt="" /></li>
+                <li><img src="../img/lightred.png" alt="" /></li>
+                <li><img src="../img/white.png" alt="" /></li>
+            </ul>
+        </div>
+
+
+
+    </div>
+    <div id="footer">
+        <div class="box">
+            <span class="box-border1"><a href="location1.html"> <img src="../img/Location.png" width="25px" height="25px" style="margin: 2px"></a></span>
+            <span class="box-border2"></span>
+            <span class="box-border3" data-name="login"><a href="login.html"> <img src="../img/login.png" width="30px" height="30px" ></a></span>
+        </div>
+
+
+
+    </div>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+function clickone(){
+	alert(1);
+}
+<!--
+
+//-->
+$(function(){
+	
+	$(".promptu-menu li img").click(function(){
+		alert(1);
+	})
+})
+
+</script>

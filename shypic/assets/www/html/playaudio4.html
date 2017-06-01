@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+    <title>音乐播放列表</title>
+    <!-- meta使用viewport以确保页面可自由缩放 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- 引入 jQuery Mobile 样式 -->
+    <link rel="stylesheet" href="http://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+
+    <!-- 引入 jQuery 库 -->
+    <script src="http://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+
+    <!-- 引入 jQuery Mobile 库 -->
+    <script src="http://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+	<style>
+        #songarea{
+            width: 94%;
+            margin: 3%;
+            background-color: rgba(200, 200, 200, 0.87);
+            height: 100px;
+            padding: 5px;
+        }
+        #songarea img{
+            margin-left:3% ;
+            width:100px;
+            height:100px;
+            border-radius: 50%;
+            float: left;
+            -webkit-animation: run 10s linear infinite;
+            animation:run 10s linear infinite;
+
+        }
+        #songarea audio{
+            margin-left: 3%;
+            margin-top: 2%;
+            width: 60%;
+            
+            vertical-align: middle;
+        }
+        @keyframes run{
+            0%{
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100%{
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+<div data-role="page" id="pageone" >
+
+    <div data-role="header" data-position="fixed" data-theme="b">
+        <a href="#" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-left">主页</a>
+        <h1>音乐列表</h1>
+
+    </div>
+    <div data-role="main" >
+       <ul data-role="listview" id="musiclist">
+       
+       </ul>
+    </div>
+
+    <div data-role="footer" data-position="fixed" data-fullscreen="true" data-theme="b">
+       <h1></h1>
+    </div>
+
+</div>
+	
+</body>
+</html>
+  <script type="text/javascript" src="../js/jquery-3.1.1.js"></script>
+  <script type="text/javascript">
+             $(function(){
+            	
+            	 $.ajax({
+     				type:"post",
+     				url:"http://12.12.13.130:8080/0419sshweb/user_getMuisc.action",
+     				/* 手动跨域问题 运行时地址栏输入http://12.12.13.130:8080/0419sshweb/playaudio3.html*/
+     				dataType:"json",
+     				beforeSend:function(){
+     					alert("正在请求服务器资源");
+     				},  
+     				success:function(data){
+     					alert(data);
+     					   
+     						$.each(data,function(index,value){
+     							/* jquery mobile a标签点击后进入第二个页面，但js无效   加入target=“_top”  ，强制性将文档清空并加载了一次， 强制刷新 */
+     							$("#musiclist").append("<li style='margin:20px;border-bottom:1px solid #333'><a target='_top' href='playsong2.html?name="+value.mname+"' alt='"+value.id+"'>"+value.mname+"</a></li>");
+     						})
+     						
+     						
+     				},  
+     				error:function(){
+     					alert("请求服务器资源失败！");
+     				}
+     			});
+             });
+
+
+
+
+</script>

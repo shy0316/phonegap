@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title></title>
+<script type="text/javascript" src="../js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+
+  $(function(){
+	  
+	 $.ajax({
+		type:'post',
+		url:'http://12.12.13.130:8080/0419sshweb/user_getVideo.action',
+		data:{"type":'mp4'},
+		dataType:'json',
+		success:function(data){
+			alert(data.videopath);
+			MediaPlay.playvideo(data.videopath);
+		},
+		error:function()
+		{
+			alert("请求服务器资源失败!");
+			
+		}
+		 
+	 });
+	 
+	  var MediaPlay={
+			  
+			  playvideo:function(data)
+			  {
+				
+				alert("视频"+data);
+				  $("#vd").attr({"src":data});
+				  $("#vd").play();
+				  
+			  }
+			  
+	  };
+	  
+	  
+	  
+  });
+
+
+
+</script>
+
+</head>
+<body>
+
+	<video id="vd"  width="400dp"  height="360dp" controls="controls"></video>
+	
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta charset="UTF-8">
+    <title>音乐播放列表</title>
+    <!-- meta使用viewport以确保页面可自由缩放 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- 引入 jQuery Mobile 样式 -->
+    <link rel="stylesheet" href="http://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">
+
+    <!-- 引入 jQuery 库 -->
+    <script src="http://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+
+    <!-- 引入 jQuery Mobile 库 -->
+    <script src="http://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+	
+</head>
+<body>
+<div data-role="page" id="pageone" >
+
+    <div data-role="header" data-position="fixed" data-theme="b">
+        <a href="#" class="ui-btn ui-corner-all ui-shadow ui-icon-home ui-btn-icon-left">主页</a>
+        <h1>音乐列表</h1>
+
+    </div>
+    <div data-role="main" >
+        <script type="text/javascript" src="../js/jquery-3.1.1.min.js"></script>
+         <script type="text/javascript">
+
+	  function songone(){
+		  alert(1)
+		  $.post("http://12.12.13.130:8080/0419sshweb/user_getMuisc.action",{},function(data){
+			  
+				 // [{"mname":"速8","id":"1","mpath":"m2.mp3"}]
+				 $.each(data,function(index,value)
+				 {
+					 alert(value.mpath);
+					 MediaPlay.playaudio(value.mpath);
+				 });
+			  },"json");
+			  
+			  var MediaPlay={
+					  playaudio:function(data)
+					  {
+						  var  path="http://12.12.13.130:8080/0419sshweb/res/"+data;
+						  alert(path);
+						  $("#ad").attr({"src":path});
+						  $("#ad").play();
+					  }
+			  };
+	  }
+	  //alert(localStorage);
+	   //我们先存储这个服务器的请求的路径
+	   //localStorage.setItem("serverPath":"http://10.0.2.2:8090/sshweb/");
+	  
+	  //页面加载完毕请求服务器
+	
+ 
+</script>
+         <ul data-role="listview">
+            <li><a onclick="songone()" >风吹麦浪</a></li>
+            <li><a href="#">列表项</a></li>
+            <li><a href="#">列表项</a></li>
+         </ul>
+         
+          <audio id="ad" controls="controls"></audio>
+     
+    </div>
+
+    <div data-role="footer" data-position="fixed" data-fullscreen="true" data-theme="b">
+       <h1></h1>
+    </div>
+
+
+</div>
+	
+</body>
+</html>

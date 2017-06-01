@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=GqH5NAbrtYoZZbxBp5jdQA2wfNArm6Yl"></script>
+<!-- v2.0版本的引用方式：src="http://api.map.baidu.com/api?v=2.0&ak=您的密钥"
+v1.4版本及以前版本的引用方式：src="http://api.map.baidu.com/api?v=1.4&callback=initialize" -->
+<script type="text/javascript" src="../js/cordova.js" charset="UTF-8" ></script>
+<script type="text/javascript" src="../js/jquery.js" charset="UTF-8"></script>
+
+</head>
+<body>
+	<span id="msgLocation"></span>
+	
+	<div id="map" style="width:600px;height:600px;"></div>
+</body>
+</html>
+<script type="text/javascript">
+	//如果jquery加载不出来，可以
+    /* window.jQuery || document.write('<script src="../js/jquery.js"><\/script>'); */
+
+
+	//页面加载完毕
+	
+		/*  var latlon=position.coords.latitude+","+position.coords.longitude;
+  		var img_url="http://maps.googleapis.com/maps/api/staticmap?center="
+    +latlon+"&zoom=14&size=400x300&sensor=false";
+     document.getElementById("mapholder").innerHTML="<img src='"+img_url+"' />"; 
+		 */
+
+	
+	
+  		
+		 function getLocation()
+		 { 
+		  if(navigator.geolocation){
+		   navigator.geolocation.getCurrentPosition(showMap);
+		  }else{
+		   alert("您的浏览器不支持使用HTML 5来获取地理位置服务");
+		  }
+		 }
+		 
+		 function showMap(value)
+		 {
+				  var longitude = value.coords.longitude;
+				  var latitude = value.coords.latitude;
+				  
+				  
+				 
+				  
+				  $("#msgLocation").html("经度"+longitude+"纬度"+latitude).css('color','red');
+				  var map = new BMap.Map("map");
+				  var point = new BMap.Point(longitude,latitude);    // 创建点坐标
+				  
+				  map.centerAndZoom(point, 14);//最大18
+				  var traffic = new BMap.TrafficLayer();        // 创建交通流量图层实例      
+				  map.addTileLayer(traffic);
+				//手机和电脑必须在同一个无线下，每次ip地址不一样
+				  $.ajax({
+					  type:'post',
+					  url:"http://11.11.11.161:8080/struts_ajax0315/insertmap.action",
+					  data:{'latitude':latitude,'longitude':longitude},
+					  dataType:'text',
+					  beforeSend:function(){
+						  alert(longitude);
+						  
+					  },
+					  success:function(data){
+						  alert("data = " + data);  
+						               
+					  },
+					  error:function(){
+						  alert("请求服务器资源失败");
+					  }
+				  });
+				  
+		 }
+		 
+
+		 
+		 function init()
+		 {
+		  getLocation();
+		 }	
+		 
+		 window.onload = init;
+		 
+		</script>
+  	
+</script>
