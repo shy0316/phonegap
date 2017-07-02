@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+	
+		 body
+        {
+            width:100%;
+            height:100%;
+            margin:0px;
+            padding:0px;
+            background-color:rgba(0,0,0,.7);
+
+        }
+         .content-header{
+            height: 50px;
+        }
+        
+        .content-header h2,h3{
+            text-align:center;
+            color:white;
+        }
+        h3{
+            font-size: 14px;
+
+        }
+        h3:before{
+            content:"";
+            width:30px;
+            height:2px;
+            background-color:#fff;
+            position:absolute;
+            top:80px;
+            right:220px;
+        }
+        h3:after{
+            content:"";
+            width:30px;
+            height:2px;
+            background-color:#fff;
+            position:absolute;
+            top:80px;
+            right:100px;
+        }
+
+		#songarea{
+			height:200px;
+		}
+        #control{
+            display:block;
+            margin-top:60px;
+            margin-left:20%;
+            width:200px;
+            height:200px;
+            border-radius: 50%;
+            border:5px solid rgba(0,0,0,.3);
+            -webkit-animation: run 10s linear infinite;
+            animation:run 10s linear infinite;
+
+
+        }
+
+        @keyframes run{
+            0%{
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100%{
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+        .stop{
+            animation-play-state: paused;
+            -webkit-animation-play-state: paused;
+            -moz-animation-play-state: paused;
+
+
+        }
+        .run{
+            -webkit-animation-play-state: running;
+            -moz-animation-play-state: running;
+            animation-play-state: running;
+        }
+        
+        .play-progress-rate{
+           margin-top:40px;
+
+        }
+        .bottomContent{
+            position:absolute;
+            top:80%;
+        }
+
+        #prev,#next,#play,#pause{
+            width:50px;
+            height:50px;
+
+        }
+        .hidden{
+            display:none;
+        }
+        #prev{
+            float:left;
+            position: relative;
+            left:20%;
+
+        }
+        #next{
+            float:right;
+            position: relative;
+            left:100%;
+        }
+        #play,#pause{
+            float:left;
+            position: relative;
+            left:60%;
+        }
+         .play-progress-rate{
+            margin-top:40px;
+            width: 100%;
+            font-size: 14px;
+            height: 30px;
+
+        }
+        .play-time{
+            float: left;
+            margin-left: 2%;
+        }
+        .surplus-time{
+            float: right;
+            margin-right: 2%;
+        }
+        .progress-rate-bg{
+            float: left;
+            margin-left: 2%;
+            margin-top: 6px;
+            width: 235px;
+
+            height: 5px;
+            border: 1px solid #fff;
+        }
+        .progress-rate-color{
+            background:linear-gradient(to left, #da261c, #d59a25, #d1d552,#0064cd,#408140,#1f6377,#6e44c2);
+             height: 5px;
+             width: 0px;
+
+
+        }
+         
+	</style>
+	<script type="text/javascript" src="jquery-3.1.1.js"></script>
+	<script type="text/javascript">
+	$(function(){
+		
+		//获取地址栏参数列表的listId值
+		var listid=GetQueryString("mid");
+		var timer;//调用加载时间更新表达式即更新函数
+        //歌曲当前播放时间，总时间
+        var lefttimeobj,righttimeobj,sumtime,currenttime;
+        var songprogresslength=0;//歌曲进度
+        var progressBg = document.getElementById("progressBg");
+        var progressColor = document.getElementById("progressColor");
+		//alert(listid)
+		var control;
+		var music = document.getElementById("ad");
+		$.ajax({
+			type:"post",
+			url:"user_getMusicById.action",
+			data:{"mid":listid},
+			dataType:"json",
+			beforeSend:function(){
+				//alert("正在请求服务器资源");
+			},  
+			success:function(data){
+				
+				 $.each(data,function(index,value)
+	                     {	
+					       $("#songname").append(value.mname);
+					       $("#singer").append(value.msinger);
+	                         alert(value.mpath);
+	                         var  path="http://172.20.10.13:8080/0419sshweb/res/"+value.mpath;
+	                         imgInfo="<img class='play' id='control' src='img/"+value.mpic+"'>";
+	     					$("#songarea").append(imgInfo);
+	                        
+	                         $("#ad").attr({"src":path});
+	                         var prevObj,nextObj;
+	                         
+	                         control = document.getElementById("control");
+	                        
+	                     });
+				
+			},  
+			error:function(){
+				alert("请求服务器资源失败！");
+			}
+		});
+		
+		
+		
+		//alert(control);
+         var pauseobj = document.getElementById("pause");
+         var playobj = document.getElementById("play");
+         //点击暂停，变播放按钮 音乐，光盘停止转动
+         pauseobj.addEventListener("click",function(){
+             pauseobj.style.display="none";
+             playobj.style.display="block";
+             music.pause();
+             //3种动画暂停方式
+             //control.addClass("stop");
+            // control.setAttribute('style', 'animation-play-state: paused;');
+            control.style.animationPlayState="paused";
+
+         },false);
+         //点击播放后变暂停
+         playobj.addEventListener("click",function(){
+             pauseobj.style.display="block";
+             playobj.style.display="none";
+             music.play();
+            control.style.animationPlayState="running";
+         },false);
+
+         /*考虑手机*/
+         pauseobj.addEventListener("touchstart",function(){
+             pauseobj.style.display="none";
+             playobj.style.display="block";
+             music.pause();
+             control.style.animationPlayState="paused";
+         },false);
+
+         playobj.addEventListener("touchstart",function(){
+             playobj.style.display="none";
+             pauseobj.style.display="block";
+             music.play();
+             control.style.animationPlayState="running";
+         },false);
+
+         //上一首
+         var prev = document.getElementById("prev");
+         prev.addEventListener("click",function(){
+             if(listid==1){
+
+             }else{
+                 //上一首按钮的a标签地址
+                 var prev_href= document.getElementById("prev_href");
+                 var prev_num = parseInt(listid)-1;
+
+                 prev_href.href="playsong2.html?mid="+prev_num;
+
+             }
+         },false);
+
+         //下一首
+         var next = document.getElementById("next");
+         next.addEventListener("click",function(){
+             if(listid==3){
+
+             }else{
+                 //上一首按钮的a标签地址
+                 var next_href= document.getElementById("next_href");
+                 var next_num = parseInt(listid)+1;
+
+                 next_href.href="playsong2.html?mid="+next_num;
+
+             }
+         },false);
+
+
+       //1瞄更新时间
+         timer = setInterval(function(){
+              lefttimeobj = document.getElementById("playTime");
+              righttimeobj = document.getElementById("surplusTime");
+             //duration 属性返回当前音频/视频的长度，以秒计。
+            // 如果未设置音频/视频，则返回 NaN
+              sumtime = music.duration;//歌曲总时间
+              currenttime  = music.currentTime;
+             // alert(currenttime)
+             songPlayTimes(sumtime,currenttime,lefttimeobj,righttimeobj);
+             //235进度条宽度
+             songprogresslength = (currenttime/sumtime)*235;
+             progressColor.style.width=songprogresslength+"px";
+             if(music.ended){
+                 //消除定时器 进度条归零 播下一曲
+                 clearInterval(timer);
+                 progressColor.style.width=0;
+                 next.click();
+
+             }
+
+
+
+         },1000);
+
+
+         //拖拽进度条  可以调节的
+         progressBg.onclick = function(event){
+             if(music.src!=""){
+                 var time = getSongProgress(event);
+                // alert(time);
+                 //chrome不支持设置时间  firefox支持
+                 music.currentTime=time;
+
+             }else{
+                 return false;
+             }
+         };
+         
+         
+
+         /*歌曲进度变化过程*/
+         function getSongProgress(event){
+             var progress;//宽度百分比
+             var songProgress;
+             /*先获取到点击的位置距离进度条最左边的长度*/
+             /*获得距离最左边的距离*/
+             var coord=coordinate(event);
+             var offsetCoord_X=coord.coord_X;
+             /*计算进度条的宽度*/
+             songScheduleChange(offsetCoord_X);
+             /*计算进度条的宽度百分比*/
+             progress=progressBarPercentage(235,offsetCoord_X)/100;
+             //alert("progress-->"+progress)
+             /*真实的歌曲进度数值*/
+             songProgress=progress*music.duration;
+            // alert("songProgress-->"+songProgress);
+             return songProgress;
+         }
+
+
+     });
+	
+	
+	//两边时间计算
+    function songPlayTimes(sumtime,currenttime,lefttimeobj,righttimeobj){
+        var leftTime,rightTime;
+        if(currenttime < sumtime){
+            leftTime = parseInt(currenttime);
+           // console.log(leftTime)
+            rightTime = parseInt(sumtime-currenttime);
+            //当前时间
+            lefttimeobj.innerHTML=conversionTime(leftTime);
+            //剩余时间
+            righttimeobj.innerHTML=conversionTime(rightTime);
+
+        }else{//歌曲播放完毕
+            lefttimeobj.innerHTML="00:00";
+            righttimeobj.innerHTML="-00:00";
+
+        }
+    }
+
+    function conversionTime(time){
+            var minutes,second,cTime;
+            minutes = Math.floor((time/60)%60);
+            if(minutes<10){
+                minutes="0"+minutes;
+            }
+
+            //console.log(minutes)
+            second = Math.floor(time%60);
+            if(second<10){
+                second = "0"+second;
+            }
+           // console.log(second)
+            cTime = minutes+":"+second;
+           // console.log(cTime)
+            return cTime;
+    }
+
+
+    /*歌曲进度条变化*/
+    function songScheduleChange(size){
+        //alert("size"+size)
+        var progressColor=document.getElementById("progressColor");
+        progressColor.style.width=size+"px";
+    }
+    /*计算进度条的宽度百分比*/
+    function progressBarPercentage(totalLength,x){
+        //传入总长度totalLength和当前点击的x值
+        var result=(parseInt(x)/parseInt(totalLength))*100;
+
+        return Math.ceil(result);
+    }
+    /*计算光标相对于第一个定位的父元素的坐标*/
+    function coordinate(e){
+        var o=window.event||e,
+                coord,coord_X,coord_Y;
+        coord_X=o.offsetX;
+        coord_Y=o.offsetY;
+	//alert(coord_X+","+coord_Y);
+        coord={"coord_X":coord_X,"coord_Y":coord_Y};
+        return coord;
+    }
+
+	function GetQueryString(name){
+	     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+	     var r = window.location.search.substr(1).match(reg);
+	     //
+	    // if(r!=null)return  unescape(r[2]if(r!=null)return  unescape(r[2]); 
+	    // return null;
+	    //解析中文乱码
+	    return r?unescape(r[2]):null;
+	}
+	
+	
+		
+		
+	</script>
+</head>
+<body>
+	<div id="main">
+		  <div class="content-header">
+		  <h2 id="songname"></h2>
+		  <span class="singerarea"> <h3 id="singer"></h3></span>
+		 
+		  </div>
+		  <div id="songarea">
+	           <!--   <img src="" > -->
+	      </div>
+	      <div class="play-progress-rate">
+    		<span id="playTime" class="play-time">0:00</span>
+    		<div id="progressBg" class="progress-rate-bg">
+       		   <div id="progressColor" class="progress-rate-color"style="width:0;"></div>
+    		</div>
+          <span id="surplusTime" class="surplus-time">-0:00</span>
+</div>
+	      
+	 	  <div class="bottomContent">
+	 	  	 <audio id="ad" src="" autoplay="true" ></audio>
+	 	  	 
+		 	<span>
+				<a href="" id="prev_href"><img src="img/prev.png" alt="" id="prev"></a>
+			</span>
+			<span>
+				<img src="img/play.png" alt="" id="play" title="播放" class="play hidden">
+				<img src="img/pause.png" alt="" id="pause" title="暂停" class="pause">
+			</span>
+			<span>
+				<a href="" id="next_href"><img src="img/next.png" alt="" id="next"></a>
+			</span>
+	 	  </div>
+	</div>
+</body>
+</html>

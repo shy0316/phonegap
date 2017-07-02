@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+   <constant name="struts.il8n.encoding" value="utf-8" />
+    
+   <!-- struts业务逻辑处理类action  被spring 管理 -->
+   <constant name="struts.objectFactory" value="spring"></constant>
+   
+   <package name="users"  extends="struts-default">
+       
+    <action name="user_*"  class="userBeans"  method="{1}"></action>
+   
+   </package>
+
+</struts>    
